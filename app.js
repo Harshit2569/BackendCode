@@ -1,44 +1,22 @@
-// const express = require('express');
-// const app = express();
-// const authRoutes = require('./Routes/authRoutes');
-
-// app.use(express.json()); // Parse JSON bodies
-
-// // Routes
-// app.use('/api', authRoutes);
-
-// // Start server
-// const PORT = 3000;
-// // app.listen(PORT, () =>
-// //     //  console.log(`Server running on port ${PORT}
-// //         console.log(`192.168.1.2:${PORT})
-// //         `));
-
-
-// app.listen(PORT, () => {
-//     console.log(`Server running at http://localhost:${PORT}`);
-// });
-
-
 require('dotenv').config();
-
 const express = require('express');
-const cors = require('cors'); // <-- Import cors
-const app = express();
+const cors = require('cors');
 const authRoutes = require('./Routes/authRoutes');
 
-app.use(express.json()); // Parse JSON bodies
+const app = express();
+app.use(express.json());
 
-// Enable CORS for all origins (development only)
-// app.use(cors());
-app.use(cors({ origin: 'http://localhost:5173' }));
-
+// Enable CORS dynamically for all origins (safe for testing)
+// In production, replace '*' with your frontend URL
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*' 
+}));
 
 // Routes
 app.use('/api', authRoutes);
 
-// Start server
-const PORT = 3000;
+// Use Railway port or fallback to 3000 locally
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
